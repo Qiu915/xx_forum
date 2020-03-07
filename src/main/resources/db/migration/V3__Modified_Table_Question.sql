@@ -1,0 +1,2 @@
+ALTER TABLE `xx_forum`.`question`
+MODIFY COLUMN `id` int(11) NOT NULL AUTO_INCREMENT;
