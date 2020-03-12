@@ -30,15 +30,16 @@ public class PublishController {
 
     @RequestMapping(value = "/publish")
     public  String toPublish(Model model){
-        model.addAttribute("tags", TagUtil.getTags());
-        return "publish";
+        throw new CustomizeException(CustomizeErrorCode.USER_NOT_FOUND);
+//        model.addAttribute("tags", TagUtil.getTags());
+//        return "publish";
     }
 //    对提交的问题进行处理
     @PostMapping(value = "/publish")
     public String doPublish(@RequestParam(value = "title", required = false) String title,
                             @RequestParam(value = "description", required = false) String description,
                             @RequestParam(value = "tag", required = false) String tag,
-                            @RequestParam(value = "id", required = false) Integer id,
+                            @RequestParam(value = "id", required = false) Long id,
                             HttpServletRequest request,
                             Model model){
 
@@ -78,7 +79,7 @@ public class PublishController {
         question.setTag(tag);
         question.setCreator(user.getAccountId());
         question.setId(id);
-        questionService.createOrUpdateQUestion(question);
+        questionService.createOrUpdateQuestion(question);
 
         return "redirect:/";
     }

@@ -1,0 +1,1 @@
+alter table comment modify parent_id bigint(20) not null;

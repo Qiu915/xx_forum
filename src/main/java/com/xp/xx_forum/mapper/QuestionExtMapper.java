@@ -9,4 +9,6 @@ public interface QuestionExtMapper {
     List<Question> queryAll();
 
     void incViewCount(Question question);
+
+    void incCommentCount(Question question);
 }

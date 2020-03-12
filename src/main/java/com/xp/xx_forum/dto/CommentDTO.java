@@ -6,30 +6,27 @@ import lombok.Data;
 /**
  * @author ph
  * @version 1.0
- * @date 2020/3/1 16:30
+ * @date 2020/3/8 16:13
  */
 @Data
-public class QuestionDTO {
+public class CommentDTO {
     private Long id;
 
-    private String title;
+    private Long parentId;
 
-    private String description;
-
-    private String tag;
+    private Integer type;
 
     private Long creator;
 
     private Integer commentCount;
 
+    private String content;
+
     private Long gmtCreate;
 
     private Long gmtModified;
 
-    private Integer viewCount;
-
     private Integer likeCount;
 
     private User user;
-
 }

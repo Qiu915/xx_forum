@@ -3,10 +3,12 @@ package com.xp.xx_forum.handler;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +25,8 @@ import java.util.Map;
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class MyErrorController implements ErrorController {
 
-//ErrorController中定义的方法，ErrorController的子类AbstractErrorController
+
+    //ErrorController中定义的方法，ErrorController的子类AbstractErrorController
 //    AbstractErrorController的子类BasicErrorController
     @Override
     public String getErrorPath() {
@@ -70,6 +73,8 @@ public class MyErrorController implements ErrorController {
             }
         }
     }
+
+
 
 
 }

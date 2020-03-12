@@ -1,0 +1,2 @@
+ALTER TABLE `xx_forum`.`question` 
+MODIFY COLUMN `id` bigint(20) NOT NULL AUTO_INCREMENT FIRST;
