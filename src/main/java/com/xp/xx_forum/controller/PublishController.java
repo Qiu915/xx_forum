@@ -1,12 +1,18 @@
 package com.xp.xx_forum.controller;
 
+import com.xp.xx_forum.bean.Notice;
 import com.xp.xx_forum.bean.Question;
 import com.xp.xx_forum.bean.User;
 import com.xp.xx_forum.exception.CustomizeErrorCode;
 import com.xp.xx_forum.exception.CustomizeException;
 import com.xp.xx_forum.service.QuestionService;
+import com.xp.xx_forum.utils.RabbitMqUtils;
 import com.xp.xx_forum.utils.TagUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +34,11 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+
     @RequestMapping(value = "/publish")
     public  String toPublish(Model model){
-        throw new CustomizeException(CustomizeErrorCode.USER_NOT_FOUND);
-//        model.addAttribute("tags", TagUtil.getTags());
-//        return "publish";
+        model.addAttribute("tags", TagUtil.getTags());
+        return "publish";
     }
 //    对提交的问题进行处理
     @PostMapping(value = "/publish")

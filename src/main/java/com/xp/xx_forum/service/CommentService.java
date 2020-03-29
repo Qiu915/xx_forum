@@ -9,8 +9,14 @@ import com.xp.xx_forum.mapper.CommentExtMapper;
 import com.xp.xx_forum.mapper.CommentMapper;
 import com.xp.xx_forum.mapper.QuestionMapper;
 import com.xp.xx_forum.mapper.UserMapper;
+import com.xp.xx_forum.utils.RabbitMqUtils;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +45,18 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private AmqpAdmin amqpAdmin;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RabbitMqUtils rabbitMqUtils;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Transactional
     public CommentDTO insertComment(Comment comment, User user) {
         comment.setCreator(user.getAccountId());
@@ -58,6 +76,18 @@ public class CommentService {
             questionService.incCommentCount(comment.getParentId());
 //            增加评论,使用主键生成策略，将生成的主键返回
             commentExtMapper.insert(comment);
+//发送通知
+            amqpAdmin.declareExchange(new DirectExchange("question-"+question.getId(),true,false));
+            amqpAdmin.declareBinding(new Binding("user-"+user.getAccountId(), Binding.DestinationType.QUEUE,"question-"+question.getId(),"user."+user.getAccountId(),null));
+
+            Notice notice = new Notice();
+            notice.setName(user.getName());
+            notice.setQuestionId(question.getId());
+            notice.setTitle(question.getTitle());
+            notice.setUserId(user.getAccountId());
+            rabbitMqUtils.sendMessage(notice,"question-"+question.getId(),"user."+user.getAccountId());
+
+            redisTemplate.opsForList().leftPush("question"+question.getId(),notice);
 
             CommentDTO commentDTO = new CommentDTO();
             BeanUtils.copyProperties(comment,commentDTO);

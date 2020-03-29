@@ -90,16 +90,20 @@
                             </h5>
                             <div th:text="${comment.content}"></div>
                             <div class="menu">
-                                <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                                <span onclick="toLike(this)" class="comment-icon" th:data-id="${comment.id}">
+                                    <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                                    <span th:id="${'likeSpan-'+comment.id}" th:data="${comment.likeCount}" th:text="${comment.likeCount}"></span>
+                                </span>
+                                &nbsp;
                                 <span onclick="showComments(this)" class="comment-icon"  th:data-id="${comment.id}" >
                                     <span class="glyphicon glyphicon-comment"></span>
-                                    <span th:text="${comment.commentCount}"></span>
+                                    <span th:id="${'span-'+comment.id}" th:data="${comment.commentCount}" th:text="${comment.commentCount}"></span>
                                 </span>
                                 <span class="pull-right" th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}"></span>
                             </div>
 
                             <!--二级评论-->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sub-comments collapse" isShow="false"
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sub-comments collapse" isShow="true"
                                  th:id="${'comment-'+comment.id}">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <input type="text" class="form-control" placeholder="评论一下……"

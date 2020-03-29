@@ -14,7 +14,8 @@ public enum CustomizeErrorCode {
     NO_LOGIN(1005,"当前未登录，请先登录再操作"),
     CONTENT_NOT_NULL(1006,"评论的内容不能为空或空字符串"),
     TARGET_NOT_FOUND(1007,"未选中问题或题目进行评论"),
-    COMMENT_NOT_FOUND(1008,"你要找的评论不存在了")
+    COMMENT_NOT_FOUND(1008,"你要找的评论不存在了"),
+
     ;
 
     private Integer Code;

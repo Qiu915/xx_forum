@@ -34,4 +34,12 @@
     update comment set comment_count = comment_count +1 where id =#{id}
   </update>
 
+  <update id="incLikeCount" parameterType="com.xp.xx_forum.bean.Comment">
+    update comment set like_count = like_count +1 where id =#{id}
+  </update>
+
+  <update id="decLikeCount" parameterType="com.xp.xx_forum.bean.Comment">
+    update comment set like_count = like_count -1 where id =#{id}
+  </update>
+
 </mapper>

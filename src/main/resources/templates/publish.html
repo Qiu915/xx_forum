@@ -40,7 +40,10 @@
                         delay: 0,
                         watch: false,
                         placeholder: "请输入问题描述",     // dynamic set Markdown text
-                        path : "/js/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
+                        path : "/js/lib/", // Autoload modules mode, codemirror, marked... dependents libs path
+                        imageUpload: true,
+                        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                        imageUploadURL: "/upload",
                     });
                 });
             </script>

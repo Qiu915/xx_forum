@@ -8,4 +8,8 @@ public interface CommentExtMapper {
     Integer insert(Comment comment);
 
     void incCommentCount(Comment parentComment);
+
+    void incLikeCount(Comment comment);
+
+    void decLikeCount(Comment comment);
 }

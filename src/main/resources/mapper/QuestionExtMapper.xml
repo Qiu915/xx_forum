@@ -30,4 +30,8 @@
     update question set comment_count = comment_count +1 where id =#{id}
   </update>
 
+  <select id="findQuestions" parameterType="com.xp.xx_forum.bean.User" resultMap="BaseResultMap">
+    select * from question where creator = #{accountId,jdbcType=BIGINT} order by gmt_create desc
+  </select>
+
 </mapper>

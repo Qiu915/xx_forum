@@ -164,6 +164,25 @@ public class QuestionService {
         }
         return commentDTOS;
     }
+
+    public Map<String, Object> findQuestions(User user, Integer pageNo, Integer pageSize) {
+
+//        使用分页插件查出所有当前用户发布的问题
+        PageHelper.startPage(pageNo,pageSize);
+        List<Question> questions = questionExtMapper.findQuestions(user);
+        PageInfo page = new PageInfo(questions,5);
+        Map<String, Object> map = new HashMap<>();
+        List<QuestionDTO> questionDTOs = new ArrayList<>();
+        for (Question question : questions) {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(user);
+            questionDTOs.add(questionDTO);
+        }
+        map.put("page",page);
+        map.put("questions",questionDTOs);
+        return map;
+    }
 }
 
 

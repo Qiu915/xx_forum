@@ -7,6 +7,8 @@ import com.xp.xx_forum.dto.GithubUserDTO;
 
 import com.xp.xx_forum.service.UserService;
 import com.xp.xx_forum.utils.GithubUtil;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -41,6 +43,10 @@ public class AuthorizeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AmqpAdmin amqpAdmin;
+
+
 
     @RequestMapping("/callback")
     public String callback(@RequestParam("code") String code,
@@ -68,6 +74,9 @@ public class AuthorizeController {
             Cookie cookie = new Cookie("token", userToken);
             cookie.setMaxAge(60 * 60 * 24 * 30 * 6);
             response.addCookie(cookie);
+
+            amqpAdmin.declareQueue(new Queue("user-"+user.getAccountId(),true,false,false));
+
             return "redirect:/";
         }else{
 //            用户不存在，返回首页重新登录
