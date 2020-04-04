@@ -98,7 +98,7 @@ function showComments(e) {
         $.ajax({
             type : "POST",
             url : "/comments",
-            data : JSON.stringify({parentId : commentId}),
+            data : JSON.stringify({commentId : commentId}),
             contentType: "application/json",
             dataType: "json",
             success : function (results) {

@@ -16,4 +16,5 @@ public class Notice implements Serializable {
     private String name;
     private Long questionId;
     private String title;
+    private Long gmtCreate;
 }

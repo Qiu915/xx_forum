@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>webSocket</title>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/sockJs.js" type="application/javascript"></script>
+    <script src="/js/stomp2.32.js" type="application/javascript"></script>
+
+</head>
+<body>
+
+<div th:insert="~{header :: head}"></div>
+<h1>webSocket</h1>
+<button id="connect" onclick="connect();">Connect</button>
+<div id="conversationDiv">
+    <labal>名字</labal><input type="text" id="name" />
+    <button id="sendName" onclick="sendName();">Send</button>
+    <p id="response"></p>
+</div>
+</body>
+<script type="text/javascript">
+
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS("/noticeServer");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({},function (data) {
+            console.log("data:"+data);
+            stompClient.subscribe("/user/zhangsan/message",function (response) {
+                console.log("111111111111"+response.body);
+            })
+        });
+    }
+
+
+    function sendName() {
+        var name = document.getElementById('name').value;
+        console.info(1111111111);
+        stompClient.send("/subscribe", {}, JSON.stringify({ 'name': name }));
+    }
+
+
+</script>
+</html>

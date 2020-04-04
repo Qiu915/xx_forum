@@ -3,6 +3,7 @@ package com.xp.xx_forum.intercepter;
 import com.xp.xx_forum.bean.User;
 import com.xp.xx_forum.bean.UserExample;
 import com.xp.xx_forum.mapper.UserMapper;
+import com.xp.xx_forum.utils.SpringBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,8 +22,8 @@ import java.util.List;
 @Component
 public class LoginIntercepter implements HandlerInterceptor {
 
-    @Autowired
-    private UserMapper userMapper;
+//    @Autowired
+//    private UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -32,6 +33,7 @@ public class LoginIntercepter implements HandlerInterceptor {
         for (Cookie cookie : cookies) {
            if(cookie.getName().equals("token")){
                String token = cookie.getValue();
+               UserMapper userMapper = (UserMapper) SpringBeanUtil.getBean(UserMapper.class);
                UserExample userExample = new UserExample();
                userExample.createCriteria()
                        .andTokenEqualTo(token);

@@ -12,6 +12,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +45,7 @@ public class AuthorizeController {
     private UserService userService;
 
     @Autowired
-    private AmqpAdmin amqpAdmin;
+    private RedisTemplate redisTemplate;
 
 
 
@@ -75,7 +76,6 @@ public class AuthorizeController {
             cookie.setMaxAge(60 * 60 * 24 * 30 * 6);
             response.addCookie(cookie);
 
-            amqpAdmin.declareQueue(new Queue("user-"+user.getAccountId(),true,false,false));
 
             return "redirect:/";
         }else{
@@ -88,7 +88,10 @@ public class AuthorizeController {
     @RequestMapping("/loginOut")
     public String loginOut(HttpServletResponse response, HttpServletRequest request){
 //        退出登录将session中存的user信息删除，并使传向服务器的cookie失效
+
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        redisTemplate.delete("loginUser:"+user.getAccountId());
         session.removeAttribute("user");
 //       设置cookie立即失效，向服务器发送一个同名的立即失效的cookie覆盖原有的cookie
         Cookie token = new Cookie("token", null);

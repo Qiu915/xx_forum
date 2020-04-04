@@ -1,19 +1,12 @@
 package com.xp.xx_forum.controller;
 
-import com.xp.xx_forum.bean.Notice;
 import com.xp.xx_forum.bean.Question;
 import com.xp.xx_forum.bean.User;
-import com.xp.xx_forum.exception.CustomizeErrorCode;
-import com.xp.xx_forum.exception.CustomizeException;
 import com.xp.xx_forum.service.QuestionService;
-import com.xp.xx_forum.utils.RabbitMqUtils;
 import com.xp.xx_forum.utils.TagUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * @author ph
@@ -34,9 +28,13 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+
 
     @RequestMapping(value = "/publish")
-    public  String toPublish(Model model){
+    public  String toPublish(Model model)  {
         model.addAttribute("tags", TagUtil.getTags());
         return "publish";
     }

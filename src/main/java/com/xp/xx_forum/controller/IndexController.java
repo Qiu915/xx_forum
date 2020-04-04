@@ -1,6 +1,5 @@
 package com.xp.xx_forum.controller;
 
-import com.xp.xx_forum.dto.QuestionDTO;
 import com.xp.xx_forum.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +22,7 @@ public class IndexController {
 
     @Autowired
     private QuestionService questionService;
+
 
     @RequestMapping("/")
     public String index(

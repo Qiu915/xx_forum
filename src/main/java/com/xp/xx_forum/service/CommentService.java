@@ -9,14 +9,14 @@ import com.xp.xx_forum.mapper.CommentExtMapper;
 import com.xp.xx_forum.mapper.CommentMapper;
 import com.xp.xx_forum.mapper.QuestionMapper;
 import com.xp.xx_forum.mapper.UserMapper;
+import com.xp.xx_forum.utils.NoticeUtil;
 import com.xp.xx_forum.utils.RabbitMqUtils;
-import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,8 +48,6 @@ public class CommentService {
     @Autowired
     private AmqpAdmin amqpAdmin;
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private RabbitMqUtils rabbitMqUtils;
@@ -57,8 +55,12 @@ public class CommentService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private NoticeUtil noticeUtil;
+
+
     @Transactional
-    public CommentDTO insertComment(Comment comment, User user) {
+    public CommentDTO insertComment(Comment comment, User user){
         comment.setCreator(user.getAccountId());
         comment.setCommentCount(0);
         comment.setLikeCount(0);
@@ -85,9 +87,20 @@ public class CommentService {
             notice.setQuestionId(question.getId());
             notice.setTitle(question.getTitle());
             notice.setUserId(user.getAccountId());
+            notice.setGmtCreate(System.currentTimeMillis());
             rabbitMqUtils.sendMessage(notice,"question-"+question.getId(),"user."+user.getAccountId());
 
-            redisTemplate.opsForList().leftPush("question"+question.getId(),notice);
+            redisTemplate.opsForList().leftPush("question:"+question.getId(),notice);
+
+            if(noticeUtil.isLogin(String.valueOf(question.getCreator()))){
+                //发送消息
+//                noticeUtil.keepNotice(String.valueOf(question.getCreator()));
+                noticeUtil.sendNotice(String.valueOf(question.getCreator()));
+            }else{
+                //未登录，将消息存起来
+                noticeUtil.keepNotice(String.valueOf(question.getCreator()));
+            }
+
 
             CommentDTO commentDTO = new CommentDTO();
             BeanUtils.copyProperties(comment,commentDTO);

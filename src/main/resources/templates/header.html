@@ -33,14 +33,22 @@
                         <li>
                             <a href="/publish" style="margin-right: 50px;">发布</a>
                         </li>
+
+                        <li>
+                            <a onclick="toNotice()" style="margin-right: 50px;">
+                                <span class="label label-default">消息</span>
+                                <span class="badge" id="noticeSpan"></span>
+                            </a>
+                        </li>
+
                         <li class="dropdown" th:if="${session.user!= null}" style="margin-right: 100px;">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span th:text="${session.user.getName()}"></span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/profile">我的问题</a></li>
-                                <li><a href="#">回复</a></li>
+                                <li><a href="/profile/question">我的问题</a></li>
+                                <li id="test"><a href="/profile/notice">回复</a></li>
                                 <li><a href="/loginOut">退出登录</a></li>
                             </ul>
                         </li>
@@ -55,3 +63,10 @@
         </nav>
     </div>
 </body>
+
+<script type="text/javascript">
+
+
+
+</script>
+
